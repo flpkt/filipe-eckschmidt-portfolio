@@ -6049,7 +6049,16 @@
       overflow: visible; overflow-x: clip;
     }
     .panel[data-id="about"], .panel[data-id="projects-list"] { padding-top: calc(24px + env(safe-area-inset-top)); }
+    /* Off-screen pages are removed from the render tree at rest so Safari
+       sees no full-screen fixed layers to tint its bars with. They come back
+       only while a page transition or swipe is running (body.pg-anim). */
+    body:not(.pg-anim) .panel.is-project:not(.is-open),
+    body.project-open:not(.pg-anim) .panel[data-id="about"],
+    body.project-open:not(.pg-anim) .panel[data-id="projects-list"],
+    body.show-projects:not(.pg-anim) .panel[data-id="about"],
+    body:not(.show-projects):not(.pg-anim) .panel[data-id="projects-list"] { display: none; }
   }
+  .wsheet:not(.is-shown) { display: none; }
 
   /* ===== Thermal text: canvas draws the fill; the real text stays for layout and selection ===== */
   .welcome h1 .accent-grad.thermal-on { background: none; animation: none; }
@@ -7775,6 +7784,9 @@
       lastFocus = document.activeElement;
       box.querySelector('.ws-body').scrollTop = 0;
       panelEl.style.transform = '';
+      clearTimeout(box._hideT);
+      box.classList.add('is-shown');
+      void box.offsetHeight;
       box.classList.add('is-open');
       document.body.classList.add('ws-open', 'no-custom-cursor');
       requestAnimationFrame(() => panelEl.focus({ preventScroll: true }));
@@ -7782,6 +7794,8 @@
     function close() {
       if (!box.classList.contains('is-open')) return;
       box.classList.remove('is-open');
+      clearTimeout(box._hideT);
+      box._hideT = setTimeout(() => { if (!box.classList.contains('is-open')) box.classList.remove('is-shown'); }, 380);
       document.body.classList.remove('ws-open', 'no-custom-cursor');
       panelEl.style.transform = '';
       if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
@@ -8006,8 +8020,17 @@
     const id = document.body.classList.contains('show-projects') ? 'projects-list' : 'about';
     return panels.find(p => p.dataset.id === id);
   }
+  let pgT = 0, pgHold = false;
+  function pgAnim(ms) {
+    if (!isMobile()) return;
+    document.body.classList.add('pg-anim');
+    void document.body.offsetHeight;
+    clearTimeout(pgT);
+    pgT = setTimeout(() => { if (!pgHold) document.body.classList.remove('pg-anim'); }, ms || 480);
+  }
   function swapMobilePage(mutate, freshTop) {
     if (!isMobile()) { mutate(); return; }
+    pgAnim();
     const before = currentMobilePage(), y = window.scrollY;
     if (before) pageScroll[before.dataset.id] = y;
     mutate();
@@ -8359,6 +8382,7 @@
       axisLocked = false;
       axisIsX = false;
       trackingPanel.classList.add('is-dragging');
+      pgHold = true; pgAnim();
     }
 
     function onMove(e) {
@@ -8375,6 +8399,7 @@
             // user is scrolling vertically — release the gesture
             trackingPanel.classList.remove('is-dragging');
             trackingPanel = null;
+            pgHold = false; pgAnim(60);
             return;
           }
         } else {
@@ -8395,6 +8420,7 @@
       const panel = trackingPanel;
       trackingPanel = null;
       panel.classList.remove('is-dragging');
+      pgHold = false; pgAnim();
 
       const dx = lastX - startX;
       const dt = Math.max(1, lastT - startT);
@@ -9023,6 +9049,7 @@
      ============================================================ */
   (function initThermalText() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
     const grad = document.querySelector('.welcome h1 .accent-grad');
     if (!grad) return;
     const h1 = grad.closest('h1');
@@ -9486,6 +9513,7 @@
       if (!target) return;
       const forward = dx < 0;
       const outgoing = openProjectPanel;
+      pgAnim();
       // New panel starts off-screen on the side the finger came from.
       target.style.transition = 'none';
       target.style.transform = `translateX(${forward ? 100 : -100}%)`;
