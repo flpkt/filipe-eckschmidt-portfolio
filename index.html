@@ -6107,6 +6107,9 @@
     .bottom-nav {
       transition: transform 0.5s cubic-bezier(.22,1,.36,1), opacity 0.36s cubic-bezier(.22,1,.36,1), visibility 0s linear 0s;
     }
+    /* Lift the bars clear of the bottom edge Safari samples. */
+    .bottom-nav { bottom: calc(env(safe-area-inset-bottom, 0px) + 22px) !important; }
+    .project-tabs-wrap { bottom: calc(env(safe-area-inset-bottom, 0px) + 22px) !important; }
     body.nav-minimized .bottom-nav,
     body.project-open .bottom-nav {
       transform: translateY(10px) scale(0.94);
