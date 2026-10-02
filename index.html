@@ -4,11 +4,10 @@
 <meta charset="UTF-8" />
 <script>
   (function () {
-    // Follow the device setting. A manual toggle only lasts for this visit,
-    // so a saved choice never overrides the device on the next visit.
-    var t = null;
-    try { localStorage.removeItem('theme'); t = sessionStorage.getItem('theme'); } catch (e) {}
-    if (t !== 'light' && t !== 'dark') t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    // Always open in the device's mode. The toggle only changes the
+    // current view; a reload or a device switch goes back to the device.
+    var t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    try { localStorage.removeItem('theme'); sessionStorage.removeItem('theme'); } catch (e) {}
     document.documentElement.setAttribute('data-theme', t);
   })();
 </script>
@@ -9460,13 +9459,10 @@
       });
     };
     apply(root.getAttribute('data-theme') || 'light');
-    // If the device switches light/dark while the page is open, follow it
-    // (unless the visitor picked a mode with the toggle during this visit).
+    // If the device switches light/dark while the page is open, follow it,
+    // even after a manual toggle.
     const mq = window.matchMedia && matchMedia('(prefers-color-scheme: dark)');
     const onSystem = () => {
-      let picked = null;
-      try { picked = sessionStorage.getItem('theme'); } catch (err) {}
-      if (picked) return;
       root.classList.add('theme-anim');
       apply(mq.matches ? 'dark' : 'light');
       setTimeout(() => root.classList.remove('theme-anim'), 400);
@@ -9477,7 +9473,6 @@
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       root.classList.add('theme-anim');
       apply(next);
-      try { sessionStorage.setItem('theme', next); } catch (err) {}
       setTimeout(() => root.classList.remove('theme-anim'), 400);
     });
   })();
