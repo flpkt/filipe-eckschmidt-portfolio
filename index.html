@@ -6118,6 +6118,26 @@
       transition: transform 0.5s cubic-bezier(.22,1,.36,1), opacity 0.36s cubic-bezier(.22,1,.36,1), visibility 0s linear 0.36s;
     }
   }
+
+  /* ===== Case study: QA ===== */
+  .s-qa-lead { margin: 0 0 22px; font-size: 17px; line-height: 1.55; color: var(--text-primary); max-width: 620px; }
+  .s-qa { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 720px; }
+  .s-qa li { position: relative; padding: 18px 18px 18px; border-radius: 16px; background: rgba(0,0,0,0.025); border: 1px solid var(--divider); }
+  .s-qa .qa-n { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 22px; padding: 0 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; color: #fff;
+    background: linear-gradient(135deg, var(--c1), var(--c2)); margin-bottom: 10px; }
+  .s-qa h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text-primary); }
+  .s-qa p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-secondary); }
+  html[data-theme="dark"] .s-qa li { background: rgba(255,255,255,0.035); border-color: rgba(255,255,255,0.08); }
+  @media (max-width: 560px) { .s-qa { grid-template-columns: 1fr; } .s-qa-lead { font-size: 16px; } }
+
+  /* About: wide QA card spanning the toolset grid */
+  .focus-card--wide { grid-column: 1 / -1; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 0 16px; align-items: start; }
+  .focus-card--wide .ico { margin-bottom: 0; }
+  .focus-card--wide .qa-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding: 0; list-style: none; }
+  .focus-card--wide .qa-pills li { font-size: 12px; font-weight: 500; padding: 5px 10px; border-radius: 999px; color: var(--text-primary);
+    background: rgba(0,0,0,0.04); border: 1px solid var(--divider); }
+  html[data-theme="dark"] .focus-card--wide .qa-pills li { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
@@ -6271,7 +6291,7 @@
             <span class="idx">04</span>
             <div class="principle-body">
               <h3>Own it end to end</h3>
-              <p>A missing spec, an unhandled edge case, a broken component: I sort it out instead of leaving it for someone else.</p>
+              <p>A missing spec, an unhandled edge case, a broken component: I sort it out instead of leaving it for someone else. That includes QA: I check every build against the design before it ships.</p>
             </div>
           </li>
           <li>
@@ -6332,6 +6352,16 @@
             </div>
             <h3>Design systems</h3>
             <p>When the same problem keeps coming back. Tokens and components, built to be reused.</p>
+          </div>
+          <div class="focus-card focus-card--wide">
+            <div class="ico" style="--c1:#f59e0b;--c2:#ef4444;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div>
+              <h3>Design QA</h3>
+              <p>On every project, not picked per problem. Design isn't done until the build matches it, so I check it before release and again after.</p>
+              <ul class="qa-pills"><li>Build vs Figma</li><li>Bug tickets &amp; sign-off</li><li>Devices &amp; edge cases</li><li>Post-launch check</li></ul>
+            </div>
           </div>
         </div>
         <p class="stack-line"><strong>Everyday stack:</strong> Figma · Amplitude · Mixpanel · Storybook · Notion · Asana · Cursor · Claude</p>
@@ -6533,6 +6563,15 @@
               { image: IMG.mychats,   label: "My Chats + usage",         note: "History with daily and weekly usage bars." }
             ]
           },
+          qa: {
+            lead: "I review every build against Figma before it ships. For the chat that meant every context and usage-limit state, not only the happy path.",
+            steps: [
+              { step: "Build review", text: "Staging builds checked against Figma: spacing, type, copy and every state of the context chip, AI cards and composer." },
+              { step: "Bugs & sign-off", text: "Design bugs logged with a screenshot and the Figma link, prioritized with engineering. It ships after my sign-off." },
+              { step: "Devices & edge cases", text: "iOS and Android on small and large screens, plus empty, loading, error and out-of-tokens states." },
+              { step: "After launch", text: "Planned: review the live feature and the tracked events to catch what testing missed." }
+            ]
+          },
           metricsNote: "Baseline from Amplitude, last 30 days, before launch.",
           metrics: [
             { value: "32%",      label: "of game-page visitors hop Game → Stats → Betslip within an hour", note: "4.7K users" },
@@ -6623,6 +6662,15 @@
               { image: null, label: "MUI-based library", note: "Figma components mapped 1:1 to code." }
             ]
           },
+          qa: {
+            lead: "Closing the gap between design and build meant checking the build, not just the files.",
+            steps: [
+              { step: "Build review", text: "Each release reviewed against Figma component by component, with the MUI mapping as the reference." },
+              { step: "Bugs & sign-off", text: "Mismatches logged as tickets and signed off with the developers inside the sprint." },
+              { step: "Devices & edge cases", text: "Browsers and screen sizes, plus empty, loading and error states in the firm and client flows." },
+              { step: "After launch", text: "Live flows checked after release, with Mixpanel showing whether firms used what shipped." }
+            ]
+          },
           metrics: [
             { value: "30% ↓", label: "Design vs build inconsistencies", note: "Reported by users." }
           ],
@@ -6695,6 +6743,15 @@
               { image: null, label: "Authoring canvas", note: "Type, label and required status in one row, with a live preview beside it." },
               { image: null, label: "Depth on demand", note: "Logic, evidence and scoring expand inline. No nested modals." },
               { image: null, label: "Design system", note: "Components, tokens and handoff docs built from zero." }
+            ]
+          },
+          qa: {
+            lead: "A new canvas and a new design system shipping together meant QA on both: the flow and the components.",
+            steps: [
+              { step: "Build review", text: "Canvas builds reviewed against Figma and the design system tokens before each release." },
+              { step: "Bugs & sign-off", text: "Design bugs logged and signed off with the PM and engineering before release." },
+              { step: "Devices & edge cases", text: "Web plus the iOS and Android field app, long checklists, and empty and error states." },
+              { step: "After launch", text: "Funnel analytics and CS tickets reviewed after release to catch what testing missed." }
             ]
           },
           metrics: [
@@ -6770,6 +6827,15 @@
               { image: null, label: "Monitoring dashboard", note: "Signals and equipment status, with risk surfaced first." },
               { image: null, label: "Simplified workflow", note: "Multi-input process with fewer steps." },
               { image: null, label: "Design system", note: "Shared components across Qt desktop and web." }
+            ]
+          },
+          qa: {
+            lead: "In a safety tool a broken state is a real risk, so every build was checked before it reached operators.",
+            steps: [
+              { step: "Build review", text: "Qt desktop and web builds checked against the prototypes and the shared design system." },
+              { step: "Bugs & sign-off", text: "Issues logged and signed off with the engineering team before release." },
+              { step: "Devices & edge cases", text: "Desktop and web on different screen setups, plus the error and alert states operators rely on." },
+              { step: "After launch", text: "Released workflows checked again in user testing with operators." }
             ]
           },
           metrics: [
@@ -7682,6 +7748,12 @@
     return tiles + track + note;
   }
 
+  function renderQA(q) {
+    if (!q) return '';
+    return `${q.lead ? `<p class="s-qa-lead">${escapeHtml(q.lead)}</p>` : ''}<ol class="s-qa">${(q.steps || []).map((x, i) => `
+      <li><span class="qa-n">${String(i + 1).padStart(2, '0')}</span><h4>${escapeHtml(x.step)}</h4><p>${escapeHtml(x.text)}</p></li>`).join('')}</ol>`;
+  }
+
   function row(label, id, body) {
     return `<section class="s-row" id="${id}"><h3 class="s-label">${label}</h3><div class="s-body">${body}</div></section>`;
   }
@@ -7707,6 +7779,7 @@
         ${row('Problem', sid('problem'), `<p class="s-lead">${escapeHtml(c.problem)}</p>`)}
         ${row('Approach', sid('approach'), renderDecisions(c.approach || []))}
         ${row('Result', sid('result'), renderMockups(c.result))}
+        ${c.qa ? row('QA', sid('qa'), renderQA(c.qa)) : ''}
         ${row('Metrics', sid('metrics'), renderMetrics(c))}
         ${row('Insights', sid('insights'), `<ul class="s-insights">${(c.insights || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>${c.next ? `<div class="s-next"><span class="s-next-lbl">Next time</span><p>${escapeHtml(c.next)}</p></div>` : ''}`)}
       </article>`;
@@ -7886,9 +7959,9 @@
     if (!isMore) {
       const list = multi
         ? cases.map(c => ({ id: `${p.id}-${c.id}`, label: c.title }))
-        : ['problem', 'approach', 'result', 'metrics', 'insights'].map(s => ({
+        : ['problem', 'approach', 'result'].concat(cases[0].qa ? ['qa'] : [], ['metrics', 'insights']).map(s => ({
             id: `${p.id}-${cases[0].id}-${s}`,
-            label: s === 'metrics' ? 'Metrics' : s.charAt(0).toUpperCase() + s.slice(1)
+            label: s === 'qa' ? 'QA' : s.charAt(0).toUpperCase() + s.slice(1)
           }));
       tabs = `
         <nav class="project-tabs-wrap" aria-label="Jump to section">
@@ -8827,7 +8900,7 @@
     if (!('IntersectionObserver' in window)) return;
     const GROUPS = [
       ['.case-head', []],
-      ['.s-row', ['.s-label', '.s-lead', '.s-decisions > li', '.mock', '.s-stat', '.s-track', '.s-muted', '.s-insights > li', '.s-next']],
+      ['.s-row', ['.s-label', '.s-lead', '.s-decisions > li', '.mock', '.s-stat', '.s-track', '.s-muted', '.s-insights > li', '.s-next', '.s-qa-lead', '.s-qa > li']],
       ['.s-mention', []],
     ];
     const io = new IntersectionObserver(entries => {
