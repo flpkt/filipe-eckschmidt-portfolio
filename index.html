@@ -6161,6 +6161,11 @@
   @keyframes ld-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
   @keyframes ld-in { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .ld-ray, .ld-core, .ld-inner, .ld-name { animation: none; } }
+
+  /* Case header: equal space above and below, everything centered on one line */
+  .case-head { margin-bottom: 0; padding-bottom: 48px; align-items: center; }
+  .case-head-main { display: flex; flex-direction: column; justify-content: center; }
+  @media (max-width: 768px) { .case-head { padding-bottom: 32px; } }
 </style>
 </head>
 <body>
@@ -7816,7 +7821,6 @@
           <div class="case-head-top">
             <div class="case-kicker">Case study</div>
           </div>          <h2 class="case-title">${escapeHtml(c.title)}</h2>
-          ${(c.meta || []).length ? `<ul class="case-meta">${c.meta.map(m => `<li><em>${escapeHtml(m.label)}</em>${escapeHtml(m.value)}</li>`).join('')}</ul>` : ''}
           </div>
           ${(p.work || []).length > 1 ? `<button type="button" class="case-more" data-work-open="${p.id}" aria-haspopup="dialog">
             <span class="cm-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
